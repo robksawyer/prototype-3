@@ -1,7 +1,14 @@
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
+
 import styles from '../styles/Home.module.css'
 
 import MainScene from '../components/MainScene'
+import HamburgerMenu from '../components/HamburgerMenu'
+
+const CursorCircle = dynamic(() => import('../components/CursorCircle'), {
+  ssr: false,
+})
 
 export default function Home() {
   return (
@@ -12,7 +19,7 @@ export default function Home() {
         <title>prototype</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <HamburgerMenu />
       <main className={`${styles.main} flex flex-grow flex-col`}>
         <MainScene />
       </main>
@@ -22,6 +29,7 @@ export default function Home() {
       >
         Powered by passion
       </footer>
+      <CursorCircle />
     </div>
   )
 }

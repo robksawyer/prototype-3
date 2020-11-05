@@ -1,7 +1,7 @@
 /**
  * @file MainScene.js
  */
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import useErrorBoundary from 'use-error-boundary'
 
@@ -30,17 +30,23 @@ import {
   SpotLightHelper,
   PointLightHelper,
 } from 'three'
+
 import { useHelper, OrbitControls } from '@react-three/drei'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'
 import { FaceNormalsHelper } from 'three/examples/jsm/helpers/FaceNormalsHelper'
 import { gsap } from 'gsap'
+import { easeExpOut } from 'd3-ease'
 
 import styles from './MainScene.module.css'
 
 // Effects for the main scene
 const Effects = () => {
-  return <EffectComposer></EffectComposer>
+  return (
+    <EffectComposer>
+      <Bloom />
+    </EffectComposer>
+  )
 }
 
 const Scene = () => {
@@ -51,21 +57,37 @@ const Scene = () => {
   const spotLight = useRef()
   const pointLight = useRef()
 
-  useFrame(({ clock }) => {
-    mesh.current.rotation.x = (Math.sin(clock.elapsedTime) * Math.PI) / 4
-    mesh.current.rotation.y = (Math.sin(clock.elapsedTime) * Math.PI) / 4
-    mesh.current.rotation.z = (Math.sin(clock.elapsedTime) * Math.PI) / 4
-    mesh.current.position.x = Math.sin(clock.elapsedTime)
-    mesh.current.position.z = Math.sin(clock.elapsedTime)
-    group.current.rotation.y += 0.02
-  })
+  const [animate, setAnimate] = useState(false)
+
+  // useFrame(({ clock }) => {
+  //   mesh.current.rotation.x = (Math.sin(clock.elapsedTime) * Math.PI) / 4
+  //   mesh.current.rotation.y = (Math.sin(clock.elapsedTime) * Math.PI) / 4
+  //   mesh.current.rotation.z = (Math.sin(clock.elapsedTime) * Math.PI) / 4
+  //   mesh.current.position.x = Math.sin(clock.elapsedTime)
+  //   mesh.current.position.z = Math.sin(clock.elapsedTime)
+  //   group.current.rotation.y += 0.02
+  // })
 
   useEffect(() => void (spotLight.current.target = mesh.current), [scene])
-  useHelper(spotLight, SpotLightHelper, 'teal')
-  useHelper(pointLight, PointLightHelper, 0.5, 'hotpink')
-  useHelper(mesh, BoxHelper, '#272740')
-  useHelper(mesh, VertexNormalsHelper, 1, '#272740')
-  useHelper(mesh, FaceNormalsHelper, 0.5, '#272740')
+  // useHelper(spotLight, SpotLightHelper, 'teal')
+  // useHelper(pointLight, PointLightHelper, 0.5, 'hotpink')
+  // useHelper(mesh, BoxHelper, '#272740')
+  // useHelper(mesh, VertexNormalsHelper, 1, '#272740')
+  // useHelper(mesh, FaceNormalsHelper, 0.5, '#272740')
+
+  useEffect(() => {
+    if (animate) {
+      gsap.to(mesh.current.rotation, {
+        x: 20,
+        y: -13,
+        repeat: -1,
+        yoyo: true,
+        duration: 4,
+        ease: easeExpOut,
+        onComplete: () => setAnimate(false),
+      })
+    }
+  }, [mesh, animate])
 
   return (
     <>
@@ -85,9 +107,19 @@ const Scene = () => {
         angle={0.5}
         distance={20}
       />
-      <mesh ref={mesh} position={[0, 2, 0]} castShadow>
+      <mesh
+        ref={mesh}
+        position={[0, 2, 0]}
+        castShadow
+        onClick={() => setAnimate(!animate)}
+      >
         <boxGeometry attach="geometry" />
-        <meshStandardMaterial attach="material" color="lightblue" />
+        <meshStandardMaterial
+          attach="material"
+          color="hotpink"
+          metalness={0.9}
+          roughness={0}
+        />
       </mesh>
       <mesh rotation-x={-Math.PI / 2} receiveShadow>
         <planeBufferGeometry args={[100, 100]} attach="geometry" />
@@ -115,12 +147,12 @@ const MainScene = (props) => {
         style={{
           width: '100vw',
           height: 'calc(100vh - 50px)',
-          background: 'floralwhite',
+          background: '#111111',
         }}
       >
-        <fog attach="fog" args={['floralwhite', 0, 20]} />
+        <fog attach="fog" args={['#111111', 0, 20]} />
         <Scene />
-        {/* <Effects /> */}
+        <Effects />
         <OrbitControls />
       </Tag>
     </ErrorBoundary>

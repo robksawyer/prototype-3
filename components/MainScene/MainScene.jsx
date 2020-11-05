@@ -36,7 +36,7 @@ import { useHelper, OrbitControls } from '@react-three/drei'
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'
 import { FaceNormalsHelper } from 'three/examples/jsm/helpers/FaceNormalsHelper'
 import { gsap } from 'gsap'
-import { easeExpOut } from 'd3-ease'
+import { easeExpOut, easeCubicOut } from 'd3-ease'
 
 import styles from './MainScene.module.css'
 
@@ -80,7 +80,17 @@ const Scene = () => {
       gsap.to(mesh.current.rotation, {
         x: 20,
         y: -13,
-        repeat: -1,
+        repeat: 1,
+        yoyo: true,
+        duration: 4,
+        ease: easeExpOut,
+      })
+
+      gsap.to(mesh.current.position, {
+        x: -5,
+        y: 4,
+        z: 5,
+        repeat: 1,
         yoyo: true,
         duration: 4,
         ease: easeExpOut,

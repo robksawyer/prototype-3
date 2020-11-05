@@ -1,7 +1,7 @@
 /**
  * @file MainScene.js
  */
-import React, { useRef, useEffect, useState } from 'react'
+import React, { Suspense, useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import useErrorBoundary from 'use-error-boundary'
 
@@ -31,7 +31,7 @@ import {
   PointLightHelper,
 } from 'three'
 
-import { useHelper, OrbitControls } from '@react-three/drei'
+import { useHelper, OrbitControls, useCubeTexture } from '@react-three/drei'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper'
 import { FaceNormalsHelper } from 'three/examples/jsm/helpers/FaceNormalsHelper'
@@ -39,6 +39,20 @@ import { gsap } from 'gsap'
 import { easeExpOut, easeCubicOut } from 'd3-ease'
 
 import styles from './MainScene.module.css'
+
+// const bumpMap = useLoader(TextureLoader, '/3d/bumps/fabric-bump.png')
+// bumpMap.wrapS = bumpMap.wrapT = RepeatWrapping
+// bumpMap.repeat.set(1, 1)
+//
+// Application
+// <meshStandardMaterial
+//    envMap={envMap}
+//    attach="material"
+//    roughness={0}
+//    metalness={0.9}
+//    bumpMap={bumpMap}
+//    color="#3083DC"
+//  />
 
 // Effects for the main scene
 const Effects = () => {
@@ -69,6 +83,13 @@ const Scene = () => {
   // })
 
   useEffect(() => void (spotLight.current.target = mesh.current), [scene])
+
+  // Texture loading examples
+  const envMap = useCubeTexture(
+    ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
+    { path: '/3d/color/' }
+  )
+
   // useHelper(spotLight, SpotLightHelper, 'teal')
   // useHelper(pointLight, PointLightHelper, 0.5, 'hotpink')
   // useHelper(mesh, BoxHelper, '#272740')
@@ -105,7 +126,7 @@ const Scene = () => {
       <group ref={group}>
         <pointLight
           ref={pointLight}
-          color="red"
+          color="blue"
           position={[4, 4, 0]}
           intensity={5}
         />
@@ -125,8 +146,9 @@ const Scene = () => {
       >
         <boxGeometry attach="geometry" />
         <meshStandardMaterial
+          envMap={envMap}
           attach="material"
-          color="hotpink"
+          color="lightblue"
           metalness={0.9}
           roughness={0}
         />
@@ -161,7 +183,9 @@ const MainScene = (props) => {
         }}
       >
         <fog attach="fog" args={['#111111', 0, 20]} />
-        <Scene />
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
         <Effects />
         <OrbitControls />
       </Tag>

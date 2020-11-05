@@ -151,6 +151,18 @@ const Scene = () => {
           color="lightblue"
           metalness={0.9}
           roughness={0}
+          opacity={0.5}
+        />
+      </mesh>
+      <mesh ref={mesh} position={[1, 2, 1]} castShadow>
+        <boxGeometry attach="geometry" />
+        <meshStandardMaterial
+          // envMap={envMap}
+          attach="material"
+          color="lightblue"
+          metalness={0.9}
+          roughness={0}
+          opacity={0.5}
         />
       </mesh>
       <mesh rotation-x={-Math.PI / 2} receiveShadow>

@@ -24,7 +24,16 @@ export default function Home() {
       <main className={`${styles.main} flex flex-grow flex-col`}>
         <MainScene />
       </main>
-      <WaveText />
+      <div
+        className="absolute"
+        style={{
+          left: '50%',
+        }}
+      >
+        <div className="relative w-1/2" style={{ left: '-50%' }}>
+          <WaveText className="text-white pointer-events-none" />
+        </div>
+      </div>
 
       <footer
         className={`${styles.footer} w-full h-50 bg-black text-white px-40 flex align-center items-center justify-center uppercase`}

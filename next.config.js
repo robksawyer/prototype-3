@@ -27,6 +27,7 @@ const withTM = require('next-transpile-modules')([
   '@react-three',
   'postprocessing',
   'three',
+  'gsap',
 ])
 // const withSass = require('@zeit/next-sass')
 // const withCSS = require('@zeit/next-css')

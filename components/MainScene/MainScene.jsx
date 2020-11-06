@@ -90,6 +90,10 @@ const Scene = () => {
     { path: '/3d/color/' }
   )
 
+  const bumpMap = useLoader(TextureLoader, '/3d/bumps/fabric-bump.png')
+  bumpMap.wrapS = bumpMap.wrapT = RepeatWrapping
+  bumpMap.repeat.set(1, 1)
+
   // useHelper(spotLight, SpotLightHelper, 'teal')
   // useHelper(pointLight, PointLightHelper, 0.5, 'hotpink')
   // useHelper(mesh, BoxHelper, '#272740')
@@ -144,24 +148,14 @@ const Scene = () => {
         castShadow
         onClick={() => setAnimate(!animate)}
       >
-        <boxGeometry attach="geometry" />
+        <boxBufferGeometry attach="geometry" />
         <meshStandardMaterial
           envMap={envMap}
           attach="material"
           color="lightblue"
           metalness={0.9}
           roughness={0}
-          opacity={0.5}
-        />
-      </mesh>
-      <mesh ref={mesh} position={[1, 2, 1]} castShadow>
-        <boxGeometry attach="geometry" />
-        <meshStandardMaterial
-          // envMap={envMap}
-          attach="material"
-          color="lightblue"
-          metalness={0.9}
-          roughness={0}
+          bumpMap={bumpMap}
           opacity={0.5}
         />
       </mesh>

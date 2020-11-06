@@ -5,14 +5,15 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import gsap from 'gsap'
+import { easeBackOut } from 'd3-ease'
 import {
   CSSPlugin,
-  ScrollTrigger,
   TweenLite,
   TweenMax,
   MotionPathPlugin,
   Draggable,
   TextPlugin,
+  ScrollTrigger,
 } from 'gsap/all'
 
 import SplitText from '../../gsap-bonus/umd/SplitText'
@@ -24,15 +25,22 @@ const WaveText = (props) => {
 
   useEffect(() => {
     // don't forget to register plugins
-    // gsap.registerPlugin(CSSPlugin, ScrollTrigger, Draggable, MotionPathPlugin)
     gsap.registerPlugin(
-      SplitText
+      SplitText,
+      ScrollTrigger
       // TextPlugin,
-      // ScrollTrigger,
       // Draggable,
       // MotionPathPlugin
     )
-    const tl = gsap.timeline()
+    const tl = gsap.timeline({
+      // scrollTrigger: {
+      //   trigger: '.trigger',
+      //   start: 'center bottom',
+      //   end: 'center top',
+      //   scrub: true,
+      //   markers: true,
+      // },
+    })
     const split = new SplitText('#main-text-0', {
       type: 'words, chars',
     })
@@ -41,8 +49,7 @@ const WaveText = (props) => {
     console.log('chars', chars)
 
     gsap.set('#main-text-0', { perspective: 400 })
-    tl.from(
-      chars,
+    const alts = [
       {
         duration: 0.8,
         opacity: 0,
@@ -50,11 +57,21 @@ const WaveText = (props) => {
         y: 80,
         rotationX: 180,
         transformOrigin: '0% 50% -50',
-        ease: 'back',
+        ease: easeBackOut,
         stagger: 0.01,
       },
-      '+=0'
-    )
+      {
+        duration: 0.8,
+        opacity: 0,
+        scale: 0,
+        y: 50,
+        translateY: 100,
+        transformOrigin: '0% 50% -50',
+        ease: easeBackOut,
+        stagger: 0.01,
+      },
+    ]
+    tl.from(chars, alts[1], '+=1')
   }, [])
 
   return (
@@ -63,13 +80,13 @@ const WaveText = (props) => {
         styles[`wave_text__${variant}`]
       } ${className}`}
     >
-      <p id="main-text-0">
+      <p id="main-text-0" className="text-2xl trigger">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut odio
         massa. Quisque id erat efficitur, tincidunt libero vitae, mattis sapien.
         Fusce ac orci nisi.
       </p>
       <style jsx>{`
-        .fact-2I56RYT {
+        /* .fact-2I56RYT {
           font-family: IM Fell Great Primer SC, serif;
           font-weight: 400;
           font-size: 2.894rem;
@@ -83,7 +100,7 @@ const WaveText = (props) => {
             #000,
             transparent 140%
           );
-        }
+        } */
       `}</style>
     </Tag>
   )

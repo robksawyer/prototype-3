@@ -30,8 +30,8 @@ export default function Home() {
           left: '50%',
         }}
       >
-        <div className="relative w-1/2" style={{ left: '-50%' }}>
-          <WaveText className="text-white pointer-events-none" />
+        <div className="relative w-1/2" style={{ left: '-25%' }}>
+          <WaveText className="text-center text-white pointer-events-none text-42" />
         </div>
       </div>
 
